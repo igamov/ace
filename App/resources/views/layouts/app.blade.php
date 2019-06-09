@@ -4,7 +4,6 @@
   @include('layouts.chunks.head')
 </head>
 <body class="header-fixed">
-@include('layouts.chunks.header')
 <div id="app">
   {{--<div class="page-body">--}}
     {{--@include('layouts.chunks.sidebar')--}}

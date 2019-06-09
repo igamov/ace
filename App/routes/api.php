@@ -31,3 +31,8 @@ Route::patch('/tasks/{task}', 'TaskController@updateStatus')->name('task.updateS
 Route::put('/tasks/updateAll', 'TaskController@updateAll')->name('task.updateAll');
 Route::apiResource('status', 'StatusController');
 Route::apiResource('comment', 'CommentController');
+
+Route::get('/users', 'AuthController@index')->name('user.index');
+Route::post('/register', 'AuthController@register')->name('user.register');
+Route::post('/login', 'AuthController@login')->name('user.login');
+Route::post('/logout', 'AuthController@logout')->name('user.logout');

@@ -153,10 +153,10 @@
       },
       createProject() {
         this.loading = true;
-
+        var vm = this;
         axios.post(route('projects.store'), this.project)
-          .then(function (resp) {
-            this.$router.push({name: 'projectList'});
+          .then(function (response) {
+            vm.$router.push({name: 'projectList'});
             this.loading = false;
           })
           .catch((error) => {

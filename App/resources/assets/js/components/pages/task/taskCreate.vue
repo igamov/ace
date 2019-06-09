@@ -169,9 +169,10 @@
           })
       },
       createTask() {
+        var vm = this;
         axios.post(route('task.store'), this.task)
           .then(function (resp) {
-            this.$router.push({name: 'taskList'});
+            vm.$router.push({name: 'taskList'});
           })
           .catch((error) => {
             if (error.response) {

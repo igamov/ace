@@ -5,7 +5,7 @@ window.route = require('./route').default;
 
 import VueRouter from 'vue-router';
 import router from './router';
-
+window.router = router;
 
 import App from './components/layout/App';
 
@@ -13,6 +13,7 @@ import App from './components/layout/App';
 const app = new Vue({
   el: '#app',
   render: h => h(App),
+  store,
   router
 });
 

@@ -53,5 +53,9 @@
     "comment.store": "api\/comment",
     "comment.show": "api\/comment\/{comment}",
     "comment.update": "api\/comment\/{comment}",
-    "comment.destroy": "api\/comment\/{comment}"
+    "comment.destroy": "api\/comment\/{comment}",
+    "user.index": "api\/users",
+    "user.register": "api\/register",
+    "user.login": "api\/login",
+    "user.logout": "api\/logout"
 }

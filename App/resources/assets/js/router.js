@@ -24,8 +24,12 @@ import taskList from './components/pages/task/taskList';
 import taskCreate from './components/pages/task/taskCreate';
 import taskShow from './components/pages/task/taskShow'
 // PNF
-import PageNotFound from './components/PageNotFound'
-
+import PageNotFound from './components/PageNotFound';
+//Login
+import Login from './components/pages/auth/login';
+//Users
+import userList from './components/pages/users/userList';
+import userCreate from './components/pages/users/userCreate';
 
 export default new VueRouter({
   routes : [
@@ -100,6 +104,21 @@ export default new VueRouter({
       name: 'settings',
       component: Settings
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/users',
+      name: 'userList',
+      component: userList
+    },{
+      path: '/users/create',
+      name: 'userCreate',
+      component: userCreate
+    },
+
     { path: "*", component: PageNotFound }
   ],
   mode: 'history',

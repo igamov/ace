@@ -66,6 +66,20 @@
         </ul>
       </li>
       <li class="nav-category-divider">Настройки системы</li>
+      <li>
+        <a href="#users" data-toggle="collapse" aria-expanded="false">
+          <span class="link-title">Пользователи</span>
+          <i class="mdi mdi-account-multiple link-icon"></i>
+        </a>
+        <ul class="collapse navigation-submenu" id="users">
+          <li>
+            <router-link :to="{ name: 'userList' }" exact>Список пользователей</router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'userCreate' }" exact>Создать пользователя</router-link>
+          </li>
+        </ul>
+      </li>
       <router-link tag="li" :to="{ name: 'settings' }" exact>
         <a>
           <span class="link-title">Настройки системы</span>
@@ -73,9 +87,57 @@
         </a>
       </router-link>
     </ul>
+    <div class="sidebar_footer">
+      <div class="user-account">
+        <a class="user-profile-item" href="#"><i class="mdi mdi-settings"></i> Профиль</a>
+        <button class="btn btn-primary btn-logout" @click="onLogout()">Выйти</button>
+      </div>
+      <div class="btn-group admin-access-level" @click="onProfileClick()">
+        <div class="avatar">
+          <img class="profile-img" src="http://www.placehold.it/50x50" alt="">
+        </div>
+        <div class="user-type-wrapper">
+          <p class="user_name">{{auth.email}}</p>
+          <div class="d-flex align-items-center">
+            <div class="status-indicator small rounded-indicator bg-success"></div>
+            <small class="user_access_level">Пользователь</small>
+          </div>
+        </div>
+        <i class="arrow mdi mdi-chevron-right"></i>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-
+  import Auth from "../../helpers/Auth";
+  export default {
+    data() {
+      return {
+        user: {},
+      }
+    },
+    created() {
+      Auth.init();
+    },
+    methods:{
+      onProfileClick(){
+        $('.sidebar_footer').toggleClass('opened');
+      },
+      onLogout(){
+        axios.post(route("user.logout"))
+          .then(response => {
+            if (response.data.success) {
+              Auth.logout();
+              this.$router.push({name: 'login'});
+            }
+          })
+      }
+    },
+    computed: {
+      auth() {
+        return this.$store.state.Auth;
+      },
+    },
+  }
 </script>

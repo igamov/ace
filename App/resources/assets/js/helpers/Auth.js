@@ -9,25 +9,31 @@ export default {
 
   login(data) {
     localStorage.setItem("user_id", data.user_id);
+    localStorage.setItem("email", data.email);
     localStorage.setItem("api_token", data.api_token);
-    localStorage.setItem("name", data.name);
-    //localStorage.setItem("photo", data.photo);
+    localStorage.setItem("last_name", data.last_name);
+    localStorage.setItem("first_name", data.first_name);
+    localStorage.setItem("patronymic", data.patronymic);
+    localStorage.setItem("photo", data.photo);
 
     this.init();
   },
 
   logout() {
     localStorage.removeItem("user_id");
+    localStorage.removeItem("email");
     localStorage.removeItem("api_token");
-    localStorage.removeItem("name");
-    //localStorage.removeItem("photo");
+    localStorage.removeItem("last_name");
+    localStorage.removeItem("first_name");
+    localStorage.removeItem("patronymic");
+    localStorage.removeItem("photo");
 
     this.init();
   },
 
   check() {
     if (!store.state.Auth.login) {
-      router.push("/login");
+      router.push({name: 'login'});
     }
   }
 };
