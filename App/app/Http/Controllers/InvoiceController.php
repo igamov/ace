@@ -41,10 +41,11 @@ class InvoiceController extends Controller
     }
     // Send data to the view using loadView function of PDF facade
     $pdf = PDF::loadView('pdf.invoice', ['invoice' => $invoice, 'company_detail' => $company_detail]);
-    $path = public_path('invoices/invoice-' . $invoice->number . '.pdf');
+    $pdf_path = 'invoices/invoice-' . $invoice->number . '.pdf';
+    $path = public_path($pdf_path);
     // If you want to store the generated pdf to the server then you can use the store function
     if ($pdf->save($path)) {
-      return $path;
+      return $pdf_path;
     } else {
       return false;
     }

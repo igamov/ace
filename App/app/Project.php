@@ -16,4 +16,8 @@ class Project extends Model
   {
     return $this->belongsTo('App\Priority', 'priority_id');
   }
+  public function manager()
+  {
+    return $this->belongsTo('App\User', 'manager_id');
+  }
 }

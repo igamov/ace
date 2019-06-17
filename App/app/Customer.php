@@ -31,4 +31,12 @@ class Customer extends Model
   {
     return $this->hasMany('App\Invoice');
   }
+  public function manager()
+  {
+    return $this->belongsTo('App\User', 'manager_id');
+  }
+  public function spokesman()
+  {
+    return $this->belongsTo('App\User', 'spokesman_id');
+  }
 }

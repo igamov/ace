@@ -7,6 +7,8 @@ export default {
     last_name: null,
     first_name: null,
     patronymic: null,
-    photo: null
+    photo: null,
+    role_name: null,
+    role_id: null,
   }
 };

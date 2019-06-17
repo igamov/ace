@@ -16,7 +16,7 @@ class ProjectsController extends Controller
   public function index()
   {
     $projects = Project::get();
-    $projects->load('customer', 'priority');
+    $projects->load('customer', 'priority', 'manager');
 
     return response()->json([
       'projects' => $projects->toArray()
@@ -61,7 +61,7 @@ class ProjectsController extends Controller
   public function show($id)
   {
     $project = Project::findOrFail($id);
-    return response()->json($project->load('customer', 'priority'));
+    return response()->json($project->load('customer', 'priority', 'manager'));
   }
 
 

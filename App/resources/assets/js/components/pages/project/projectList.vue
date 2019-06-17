@@ -24,10 +24,10 @@
             <td>{{project.id}}</td>
             <td><router-link :to="{name: 'projectShow', params: { id: project.id }}">{{project.title}}</router-link></td>
             <td><label :class="'badge '+ project.priority.color">{{project.priority.title}}</label></td>
-            <td><a href="#">{{project.manager_id}}</a></td>
+            <td>{{project.manager.last_name}} {{project.manager.first_name[0]}}. {{project.manager.patronymic[0]}}.</td>
             <td>{{project.date_start}}</td>
             <td>{{project.date_end}}</td>
-            <td>{{project.customer.name}}</td>
+            <td><router-link :to="{name: 'customerShow', params: { id: project.customer.id }}">{{project.customer.name}}</router-link></td>
             <td class="actions">
               <i class="mdi mdi-dots-vertical"></i>
             </td>

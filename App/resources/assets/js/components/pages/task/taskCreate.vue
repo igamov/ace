@@ -51,10 +51,10 @@
 
                   <div class="col">
                     <label for="date_end">Крайний срок</label>
-                    <div class="input-group">
-                      <input type="date" v-model="task.date_end"
-                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end">
-                      <div class="invalid-feedback" v-if="errors.date_end">
+                    <div id="datepicker-popup"  class="input-group date datepicker">
+                      <input type="text" v-model="task.date_end"
+                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end" placeholder="DD/MM/YYYY">
+                      <div class="invalid-feedback" v-if="errors.date_end" >
                         {{errors.date_end[0]}}
                       </div>
                     </div>
@@ -75,12 +75,14 @@
                 </div>
                 <div class="form-group row">
                   <div class="col">
-                    <label for="manager">Менеджер проекта</label>
+                    <label for="manager">Менеджер задачи</label>
                     <div class="input-group">
                       <select v-model="task.manager_id" id="manager"
                               :class="'custom-select' + (errors.manager_id ? ' is-invalid' : '')">
-                        <option selected value="1">Иванов И.И</option>
-                        <option value="2">Коломейцев А.О</option>
+                        <option v-for="(user) in managers"
+                                :value="user.id">
+                          {{user.last_name}} {{user.first_name[0]}}. {{user.patronymic[0]}}.
+                        </option>
                       </select>
                       <div class="invalid-feedback" v-if="errors.manager_id">
                         {{errors.manager_id[0]}}
@@ -92,15 +94,13 @@
                     <div class="input-group">
                       <select v-model="task.developer_id" id="developer"
                               :class="'custom-select' + (errors.developer_id ? ' is-invalid' : '')">
-                        <option selected value="1">Иванов И.И</option>
-                        <option value="2">Коломейцев А.О</option>
-                        <!--<option v-for="(project) in projects"-->
-                                <!--:value="project.id">-->
-                          <!--{{project.title}}-->
-                        <!--</option>-->
+                        <option v-for="(user) in developers"
+                                :value="user.id">
+                          {{user.last_name}} {{user.first_name[0]}}. {{user.patronymic[0]}}.
+                        </option>
                       </select>
-                      <div class="invalid-feedback" v-if="errors.project_id">
-                        {{errors.project_id[0]}}
+                      <div class="invalid-feedback" v-if="errors.developer_id">
+                        {{errors.developer_id[0]}}
                       </div>
                     </div>
                   </div>
@@ -141,11 +141,26 @@
         loading: false,
         priorities: [],
         projects: [],
+        managers: [],
+        developers: [],
+
       }
     },
     mounted() {
       this.getPriorities();
       this.getProjects();
+      this.getUsers();
+      if ($("#datepicker-popup").length) {
+        $('#datepicker-popup').datepicker({
+          enableOnReadonly: true,
+          todayHighlight: true,
+          templates: {
+            leftArrow: '<i class="mdi mdi-chevron-left"></i>',
+            rightArrow: '<i class="mdi mdi-chevron-right"></i>'
+          }
+
+        });
+      }
     },
     methods: {
       getPriorities(){
@@ -164,9 +179,29 @@
         axios.get(route('projects.index'))
           .then((responce) => {
             vm.projects = responce.data.projects;
-            vm.task.project_id = vm.projects[0].id;
+            if (vm.projects.length > 0) {
+              vm.task.project_id = vm.projects[0].id;
+            }
             this.loading = false;
           })
+      },
+      getUsers(){
+        this.loading = true;
+        var vm = this;
+        axios.get(route('user.index'))
+          .then((response) => {
+            vm.managers = response.data.managers;
+            if (vm.managers.length > 0) {
+              vm.task.manager_id = vm.managers[0].id;
+            }
+
+            vm.developers = response.data.developers;
+            if (vm.developers.length > 0) {
+              vm.task.developer_id = vm.developers[0].id;
+            }
+
+            vm.loading = false;
+          });
       },
       createTask() {
         var vm = this;

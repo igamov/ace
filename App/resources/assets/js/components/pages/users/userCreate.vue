@@ -57,6 +57,23 @@
                   </div>
                 </div>
                 <div class="form-group">
+                <div class="col">
+                  <label for="role_id">Роль пользователя</label>
+                  <div class="input-group">
+                    <select v-model="user.role_id" id="role_id"
+                            :class="'custom-select' + (errors.role_id ? ' is-invalid' : '')">
+                      <option v-for="(user_role) in user_roles"
+                              :value="user_role.id">
+                        {{user_role.name}}
+                      </option>
+                    </select>
+                    <div class="invalid-feedback" v-if="errors.role_id">
+                      {{errors.role_id[0]}}
+                    </div>
+                  </div>
+                </div>
+                </div>
+                <div class="form-group">
                   <div class="col">
                     <label for="password">Пароль</label>
                     <div class="input-group">
@@ -101,9 +118,23 @@
         user: {},
         errors: {},
         loading: false,
+        user_roles: [],
       }
     },
+    created(){
+      this.getUserRoles();
+    },
     methods: {
+      getUserRoles(){
+        this.loading = true;
+        var vm = this;
+        axios.get(route('user_roles.index'))
+          .then((response) => {
+            vm.user_roles = response.data.user_roles;
+            vm.user.role_id = vm.user_roles[0].id;
+            vm.loading = false;
+          });
+      },
       createUser() {
         var vm = this;
         axios.post(route('user.register'), this.user)

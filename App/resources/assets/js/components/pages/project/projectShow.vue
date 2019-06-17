@@ -48,7 +48,7 @@
                     <p>
                       <small><b>Менеджер проекта</b></small>
                     </p>
-                    <p>{{project.manager_id}}</p>
+                    <p>{{project.manager.last_name}} {{project.manager.first_name[0]}}. {{project.manager.patronymic[0]}}.</p>
                   </div>
                   <div class="col-12 col-md-3 mb-3  mb-md-0">
                     <p>

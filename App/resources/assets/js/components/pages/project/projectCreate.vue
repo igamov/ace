@@ -52,8 +52,8 @@
                   <div class="col">
                     <label for="date_end">Дата окончания</label>
                     <div class="input-group">
-                      <input type="date" v-model="project.date_end"
-                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end">
+                      <input type="text" v-model="project.date_end"
+                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end" placeholder="DD/MM/YYYY">
                       <div class="invalid-feedback" v-if="errors.date_end">
                         {{errors.date_end[0]}}
                       </div>
@@ -79,8 +79,10 @@
                     <div class="input-group">
                       <select v-model="project.manager_id" id="manager"
                               :class="'custom-select' + (errors.manager_id ? ' is-invalid' : '')">
-                        <option selected value="1">Иванов И.И</option>
-                        <option value="2">Коломейцев А.О</option>
+                        <option v-for="(user) in managers"
+                                :value="user.id">
+                          {{user.last_name}} {{user.first_name[0]}}. {{user.patronymic[0]}}.
+                        </option>
                       </select>
                       <div class="invalid-feedback" v-if="errors.manager_id">
                         {{errors.manager_id[0]}}
@@ -124,11 +126,13 @@
         loading: false,
         priorities: [],
         customers: [],
+        managers: []
       }
     },
     mounted() {
       this.getPriorities();
       this.getCustomers();
+      this.getUsers();
     },
     methods: {
       getPriorities(){
@@ -147,9 +151,24 @@
         axios.get(route('customers.index'))
           .then((responce) => {
             vm.customers = responce.data.customers;
-            vm.project.customer_id = vm.customers[0].id;
+            if (vm.customers.length > 0) {
+              vm.project.customer_id = vm.customers[0].id;
+            }
             this.loading = false;
           })
+      },
+      getUsers(){
+        this.loading = true;
+        var vm = this;
+        axios.get(route('user.index'))
+          .then((response) => {
+            vm.managers = response.data.managers;
+            if (vm.managers.length > 0) {
+              vm.customer.manager_id = vm.managers[0].id;
+            }
+
+            vm.loading = false;
+          });
       },
       createProject() {
         this.loading = true;

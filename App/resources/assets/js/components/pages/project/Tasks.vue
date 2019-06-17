@@ -95,7 +95,7 @@
         id="board-category_4"
         @add="onAdd($event, 4)"
         @change="update"
-        v-bind="dragOptions()">
+        v-bind="dragOptionsManager()">
           <li class="task-item ui-sortable-handle" v-for="(task, index) in tasks_complete" :key="task.id" :data-id="task.id">
             <p class="task-title">{{task.title}}</p>
             <div class="task-time"><i class="mdi mdi-clock-outline"></i>
@@ -140,11 +140,29 @@
     },
     methods: {
       dragOptions() {
+        if (this.$store.state.Auth.role_name === 'customer'){
+          var disable = true
+        }else{
+          var disable = false
+        }
         return {
           animation: 150,
           group: "tasks",
-          disabled: false,
           ghostClass: "ui-sortable-helper",
+          disabled: disable,
+        };
+      },
+      dragOptionsManager(){
+        if (this.$store.state.Auth.role_name === 'customer' || this.$store.state.Auth.role_name === 'developer'){
+          var disable = true
+        }else{
+          var disable = false
+        }
+        return {
+          animation: 150,
+          group: "tasks",
+          ghostClass: "ui-sortable-helper",
+          disabled: disable,
         };
       },
       getTasks(){

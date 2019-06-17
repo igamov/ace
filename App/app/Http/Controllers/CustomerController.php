@@ -16,7 +16,7 @@ class CustomerController extends Controller
     public function index()
     {
       $customers = Customer::all();
-
+      $customers->load('manager');
       return response()->json([
         'customers' => $customers->toArray()
       ]);
@@ -67,7 +67,7 @@ class CustomerController extends Controller
   public function show($id)
   {
     $customer = Customer::findOrFail($id);
-    return response()->json($customer->load('area_activity','projects', 'invoices'));
+    return response()->json($customer->load('area_activity','projects', 'invoices', 'manager', 'spokesman'));
   }
 
 

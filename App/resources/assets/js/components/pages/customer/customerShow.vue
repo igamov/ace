@@ -42,10 +42,10 @@
                       <div class="d-inline p-2"><p>{{customer.area_activity.title}}</p></div>
                       <div class="w-100"></div>
                       <div class="d-inline p-2"><p><b>Представитель</b></p></div>
-                      <div class="d-inline p-2"><p>{{customer.spokesman_id}}</p></div>
+                      <div class="d-inline p-2"><p>{{customer.spokesman.last_name}} {{customer.spokesman.first_name[0]}}. {{customer.spokesman.patronymic[0]}}.</p></div>
                       <div class="w-100"></div>
                       <div class="d-inline p-2"><p><b>Ответственный</b></p></div>
-                      <div class="d-inline p-2"><p>{{customer.manager_id}}</p></div>
+                      <div class="d-inline p-2"><p>{{customer.manager.last_name}} {{customer.manager.first_name[0]}}. {{customer.manager.patronymic[0]}}.</p></div>
                     </div>
                   </div>
                 </div>

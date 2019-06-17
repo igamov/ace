@@ -10,6 +10,7 @@
           <thead>
           <tr>
             <th>#</th>
+            <th></th>
             <th>Email</th>
             <th>Фамилия</th>
             <th>Имя</th>
@@ -20,6 +21,7 @@
           <tbody>
           <tr v-for="user in users">
             <td>{{user.id}}</td>
+            <td><img :src="user.photo" alt="" class="profile-img border-0"></td>
             <td><router-link :to="{name: 'userShow', params: { id: user.id }}">{{user.email}}</router-link></td>
             <td>{{user.last_name}}</td>
             <td>{{user.first_name}}</td>
@@ -55,6 +57,7 @@
       }
     },
     mounted() {
+
       this.getUsers();
     }
   }

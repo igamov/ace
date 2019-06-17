@@ -29,7 +29,7 @@
               </td>
               <td>{{customer.phone}}</td>
               <td>{{customer.email}}</td>
-              <td>{{customer.manager_id}}</td>
+              <td>{{customer.manager.last_name}} {{customer.manager.first_name[0]}}. {{customer.manager.patronymic[0]}}.</td>
               <td class="actions">
                 <i class="mdi mdi-dots-vertical"></i>
               </td>

@@ -54,7 +54,11 @@
     "comment.show": "api\/comment\/{comment}",
     "comment.update": "api\/comment\/{comment}",
     "comment.destroy": "api\/comment\/{comment}",
+    "user_roles.index": "api\/user_roles",
     "user.index": "api\/users",
+    "user.show": "api\/users\/{id}",
+    "user.editProfile": "api\/users\/edit_profile",
+    "user.updateProfile": "api\/users\/update_profile",
     "user.register": "api\/register",
     "user.login": "api\/login",
     "user.logout": "api\/logout"

@@ -21,7 +21,6 @@ class CreateTasksTable extends Migration
       $table->date('date_end');
       $table->dateTime('time_estimate')->nullable();
       $table->dateTime('time_actual')->nullable();
-      $table->integer('manager_id');
       $table->integer('priority_id');
       $table->integer('project_id');
       $table->integer('status_id');
