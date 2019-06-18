@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Invoice;
 use App\Service;
 use PDF;
+use App\User;
 
 class InvoiceController extends Controller
 {
@@ -54,14 +55,27 @@ class InvoiceController extends Controller
 
   /**
    * Display a listing of the resource.
-   *
+   * @param  \Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
     $invoices = Invoice::all();
     $invoices->load('customer', 'project');
-
+    $user_id = $request->user_id;
+    $user = User::findOrFail($user_id);
+    if ($user) {
+      $user_role = $user->role->name;
+      switch ($user_role) {
+        case 'manager':
+          $invoices = $invoices->where('manager_id', $user_id);
+          break;
+        case 'customer':
+          $customer_ids = $user->spoke_customers->pluck('id');
+          $invoices = $invoices->whereIn('customer_id', $customer_ids);
+          break;
+      }
+    }
     return response()->json([
       'invoices' => $invoices->toArray()
     ]);

@@ -42,6 +42,7 @@
     "task.show": "api\/task\/{task}",
     "task.update": "api\/task\/{task}",
     "task.destroy": "api\/task\/{task}",
+    "tasks.all": "api\/tasks",
     "task.updateStatus": "api\/tasks\/{task}",
     "task.updateAll": "api\/tasks\/updateAll",
     "status.index": "api\/status",

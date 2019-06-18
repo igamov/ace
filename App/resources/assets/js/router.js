@@ -101,7 +101,7 @@ const routes = [
     path: '/tasks',
     name: 'taskList',
     component: taskList,
-    meta: {requires: true, roles: ['admin', 'manager']}
+    meta: {requires: true, roles: ['admin', 'manager', 'developer']}
   },
   {
     path: '/tasks/create',

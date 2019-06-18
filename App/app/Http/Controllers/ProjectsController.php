@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Project;
@@ -11,12 +12,28 @@ class ProjectsController extends Controller
   /**
    * Display a listing of the resource.
    *
+   * @param  \Illuminate\Http\Request $request
    * @return \Illuminate\Http\Response
    */
-  public function index()
+  public function index(Request $request)
   {
-    $projects = Project::get();
+    $projects = Project::all();
+    $user_id = $request->user_id;
     $projects->load('customer', 'priority', 'manager');
+    $user = User::findOrFail($user_id);
+    if ($user) {
+      $user_role = $user->role->name;
+      switch ($user_role) {
+        case 'manager':
+          $projects = $projects->where('manager_id', $user_id);
+          break;
+        case 'customer':
+          $customer_ids = $user->spoke_customers->pluck('id');
+          $projects = $projects->whereIn('customer_id', $customer_ids);
+          break;
+      }
+    }
+
 
     return response()->json([
       'projects' => $projects->toArray()

@@ -53,7 +53,7 @@
     methods: {
       getcustomers(){
         this.loading = true;
-        axios.get(route('customers.index'))
+        axios.get(route('customers.index') + '?user_id=' + this.$store.state.Auth.user_id)
           .then((responce) => {
             this.customers = responce.data.customers;
             this.loading = false;

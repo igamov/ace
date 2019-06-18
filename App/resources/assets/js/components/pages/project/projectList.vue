@@ -38,7 +38,6 @@
     </div>
   </div>
 </template>
-
 <script>
 
   export default {
@@ -51,7 +50,8 @@
     methods: {
       getProjects(){
         this.loading = true;
-        axios.get(route('projects.index'))
+        var vm = this;
+        axios.get(route('projects.index') + '?user_id=' + vm.$store.state.Auth.user_id)
           .then((responce) => {
             this.projects = responce.data.projects;
             this.loading = false;

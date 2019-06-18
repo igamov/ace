@@ -22,13 +22,16 @@
           </li>
         </ul>
       </li>
-      <li v-if="auth.role_name === 'admin' || auth.role_name === 'manager'">
+      <li v-if="auth.role_name != 'customer'">
         <a href="#tasks" data-toggle="collapse">
           <span class="link-title">Задачи</span>
           <i class="mdi mdi-clipboard-outline link-icon"></i>
         </a>
         <ul class="collapse navigation-submenu" id="tasks">
           <li>
+            <router-link :to="{ name: 'taskList' }" exact>Список задач</router-link>
+          </li>
+          <li v-if="auth.role_name === 'admin' || auth.role_name === 'manager'">
             <router-link :to="{ name: 'taskCreate' }" exact>Создать задачу</router-link>
           </li>
         </ul>

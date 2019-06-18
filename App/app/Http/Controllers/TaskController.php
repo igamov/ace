@@ -4,9 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Task;
+use App\User;
 
 class TaskController extends Controller
 {
+  /**
+ * Display a listing of the resource.
+ * @param  \Illuminate\Http\Request $request
+ * @return \Illuminate\Http\Response
+ */
+  public function all(Request $request){
+    $tasks = Task::orderBy('priority_id', 'desc')->get();
+    $tasks->load('project', 'priority', 'status');
+    $user_id = $request->user_id;
+    $user = User::findOrFail($user_id);
+    if ($user) {
+      $user_role = $user->role->name;
+      switch ($user_role) {
+        case 'manager':
+          $tasks = $tasks->where('manager_id', $user_id);
+          break;
+        case 'developer':
+          $tasks = $tasks->where('developer_id', $user_id);
+          break;
+      }
+    }
+    return response()->json([
+      'tasks' => $tasks->toArray()
+    ]);
+  }
     /**
      * Display a listing of the resource.
      *

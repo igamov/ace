@@ -48,8 +48,9 @@
     },
     methods: {
       getInvoices(){
+        var vm = this;
         this.loading = true;
-        axios.get(route('invoice.index'))
+        axios.get(route('invoice.index') + '?user_id=' + vm.$store.state.Auth.user_id)
           .then((responce) => {
             this.invoices = responce.data.invoices;
             this.loading = false;

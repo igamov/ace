@@ -27,6 +27,7 @@ Route::apiResource('nds', 'NdsController');
 Route::apiResource('company_detail', 'CompanyDetailController',  ['except' => ['index', 'destroy', 'store']]);
 Route::apiResource('notes', 'NoteController');
 Route::apiResource('task', 'TaskController');
+Route::get('/tasks', 'TaskController@all')->name('tasks.all');
 Route::patch('/tasks/{task}', 'TaskController@updateStatus')->name('task.updateStatus');
 Route::put('/tasks/updateAll', 'TaskController@updateAll')->name('task.updateAll');
 Route::apiResource('status', 'StatusController');
