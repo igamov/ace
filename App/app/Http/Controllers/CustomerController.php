@@ -17,20 +17,23 @@ class CustomerController extends Controller
   public function index(Request $request)
   {
     $customers = Customer::all();
-    $user_id = $request->user_id;
-    $user = User::findOrFail($user_id);
-    if ($user) {
-      $user_role = $user->role->name;
-      switch ($user_role) {
-        case 'manager':
-          $customers = $customers->where('manager_id', $user_id);
-          break;
-        case 'customer':
-          $customers = $customers->where('spokesman_id', $user_id);
-          break;
+    if( $request->user_id) {
+      $user_id = $request->user_id;
+      $user = User::findOrFail($user_id);
+      if ($user) {
+        $user_role = $user->role->name;
+        switch ($user_role) {
+          case 'manager':
+            $customers = $customers->where('manager_id', $user_id);
+            break;
+          case 'customer':
+            $customers = $customers->where('spokesman_id', $user_id);
+            break;
+        }
       }
     }
     $customers->load('manager');
+
     return response()->json([
       'customers' => $customers->toArray()
     ]);
