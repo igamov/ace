@@ -21,10 +21,6 @@
           </div>
           <p class="task-details"><label :class="'badge '+ task.priority.color">{{task.priority.title}}</label></p>
           <p><router-link :to="{name: 'taskShow', params: { id: task.id }}">Подробнее</router-link></p>
-          <div class="collaborators grouped-images">
-            <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-            <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-          </div>
         </li>
         </draggable>
       <router-link  class="add-task" :to="{ name: 'taskCreate' }" exact>Создать задачу</router-link>
@@ -49,10 +45,6 @@
           </div>
           <p class="task-details"><label :class="'badge '+ task.priority.color">{{task.priority.title}}</label></p>
           <p><router-link :to="{name: 'taskShow', params: { id: task.id }}">Подробнее</router-link></p>
-          <div class="collaborators grouped-images">
-            <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-            <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-          </div>
         </li>
     </draggable>
     </div>
@@ -76,10 +68,6 @@
             </div>
             <p class="task-details"><label :class="'badge '+ task.priority.color">{{task.priority.title}}</label></p>
             <p><router-link :to="{name: 'taskShow', params: { id: task.id }}">Подробнее</router-link></p>
-            <div class="collaborators grouped-images">
-              <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-              <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-            </div>
           </li>
       </draggable>
     </div>
@@ -103,10 +91,6 @@
             </div>
             <p class="task-details"><label :class="'badge '+ task.priority.color">{{task.priority.title}}</label></p>
             <p><router-link :to="{name: 'taskShow', params: { id: task.id }}">Подробнее</router-link></p>
-            <div class="collaborators grouped-images">
-              <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-              <img class="img-sm" src="http://www.placehold.it/50x50" alt="Profile Image">
-            </div>
           </li>
       </draggable>
     </div>
@@ -130,7 +114,9 @@
       draggable,
     },
     computed: {
-
+      auth() {
+        return this.$store.state.Auth;
+      },
     },
     mounted() {
       this.getTasks();
@@ -167,7 +153,7 @@
       },
       getTasks(){
         this.loading = true;
-        axios.get(route('task.index'))
+        axios.get(route('task.index') + '?project_id=' + this.project_id)
           .then((response) => {
             this.tasks_new = response.data.tasks_new;
             this.tasks_work = response.data.tasks_work;
@@ -183,7 +169,7 @@
         });
 
         axios.put((route('task.updateAll')), {
-          tasks: this.tasks
+          tasks: this.tasks,
         }).then((response) => {
           // success message
         })
@@ -191,7 +177,8 @@
       onAdd(event, status_id) {
         let id = event.item.getAttribute('data-id');
         axios.patch(route('task.updateStatus',[id]), {
-          status_id: status_id
+          status_id: status_id,
+          user_id: this.$store.state.Auth.user_id
         }).then((response) => {
           // success message
         })

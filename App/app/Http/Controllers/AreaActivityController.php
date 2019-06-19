@@ -26,7 +26,7 @@ class AreaActivityController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'title' => 'required|max:255',
+      'title' => 'required|unique:area_activities,title|max:255',
     ]);
     $area_activity = new AreaActivity([
       'title' => $request->get('title'),
@@ -60,6 +60,9 @@ class AreaActivityController extends Controller
    */
   public function update(Request $request, $id)
   {
+    $request->validate([
+      'title' => 'required|unique:area_activities,title|max:255',
+    ]);
     $area_activity = AreaActivity::findOrFail($id);
     $area_activity->update($request->all());
     return response()->json($area_activity->toArray());

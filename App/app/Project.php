@@ -20,4 +20,10 @@ class Project extends Model
   {
     return $this->belongsTo('App\User', 'manager_id');
   }
+  public function tasks(){
+    return $this->hasMany('App\Task');
+  }
+  public function notes(){
+    return $this->hasMany('App\Note');
+  }
 }

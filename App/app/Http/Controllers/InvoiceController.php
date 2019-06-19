@@ -91,8 +91,8 @@ class InvoiceController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'payment_date' => 'required',
-      'customer_id' => 'required',
+      'payment_date' => 'required|date_format:d.m.Y',
+      'customer_id' => 'required|integer',
     ]);
     $number = $this->getNum();
     $services = $request->get('services');

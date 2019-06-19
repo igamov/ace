@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::apiResource('projects', 'ProjectsController');
+Route::get('/project', 'ProjectsController@all')->name('project.all');
 Route::apiResource('customers', 'CustomerController');
 Route::apiResource('priority', 'PriorityController');
 Route::apiResource('area_activity', 'AreaActivityController');
@@ -32,6 +33,9 @@ Route::patch('/tasks/{task}', 'TaskController@updateStatus')->name('task.updateS
 Route::put('/tasks/updateAll', 'TaskController@updateAll')->name('task.updateAll');
 Route::apiResource('status', 'StatusController');
 Route::apiResource('comment', 'CommentController');
+Route::apiResource('tickets', 'TicketController');
+
+
 Route::get('/user_roles', 'UserRolesController@index')->name('user_roles.index');
 
 

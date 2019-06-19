@@ -42,7 +42,7 @@
                     <div class="input-group">
                       <input type="text" v-model.lazy="task.date_start"
                              :class="'form-control enable-mask phone-mask' + (errors.date_start ? ' is-invalid' : '')"
-                             id="date_start" placeholder="DD/MM/YYYY">
+                             id="date_start" placeholder="дд.мм.гггг">
                       <div class="invalid-feedback" v-if="errors.date_start">
                         {{errors.date_start[0]}}
                       </div>
@@ -53,7 +53,7 @@
                     <label for="date_end">Крайний срок</label>
                     <div id="datepicker-popup"  class="input-group date datepicker">
                       <input type="text" v-model="task.date_end"
-                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end" placeholder="DD/MM/YYYY">
+                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end" placeholder="дд.мм.гггг">
                       <div class="invalid-feedback" v-if="errors.date_end" >
                         {{errors.date_end[0]}}
                       </div>
@@ -150,17 +150,6 @@
       this.getPriorities();
       this.getProjects();
       this.getUsers();
-      if ($("#datepicker-popup").length) {
-        $('#datepicker-popup').datepicker({
-          enableOnReadonly: true,
-          todayHighlight: true,
-          templates: {
-            leftArrow: '<i class="mdi mdi-chevron-left"></i>',
-            rightArrow: '<i class="mdi mdi-chevron-right"></i>'
-          }
-
-        });
-      }
     },
     methods: {
       getPriorities(){
@@ -176,7 +165,7 @@
       getProjects(){
         this.loading = true;
         var vm = this;
-        axios.get(route('projects.index'))
+        axios.get(route('project.all'))
           .then((responce) => {
             vm.projects = responce.data.projects;
             if (vm.projects.length > 0) {
@@ -205,6 +194,7 @@
       },
       createTask() {
         var vm = this;
+        this.task.user_id = this.$store.state.Auth.user_id;
         axios.post(route('task.store'), this.task)
           .then(function (resp) {
             vm.$router.push({name: 'taskList'});

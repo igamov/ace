@@ -14,10 +14,6 @@
                aria-controls="bt-content_1_2" aria-selected="false">Задачи</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="bt-tab_1_3" data-toggle="tab" href="#bt-content_1_3" role="tab"
-               aria-controls="bt-content_1_3" aria-selected="false">Команда</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" id="bt-tab_1_5" data-toggle="tab" href="#bt-content_1_4" role="tab"
                aria-controls="bt-content_1_5" aria-selected="false">Заметки</a>
           </li>
@@ -31,11 +27,10 @@
                   <p class="text-gray">ДО ЗАВЕРШЕНИЯ</p>
                   <div class="d-flex justify-content-between text-muted mt-3">
                     <small>{{project.date_start | dateTo}} - {{project.date_end | dateTo}}</small>
-                    <small>68%</small>
+                    <small>{{date_percent}}%</small>
                   </div>
                   <div class="progress progress-slim mt-2">
-                    <div class="progress-bar bg-primary" role="progressbar" style="width: 68%"
-                         aria-valuenow="68" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-primary" role="progressbar"  v-bind:style="{ width: date_percent + '%' }"></div>
                   </div>
                 </div>
               </div>
@@ -85,41 +80,8 @@
           <div class="tab-pane" id="bt-content_1_2" role="tabpanel" aria-labelledby="bt-tab_1_2">
             <Tasks v-bind:project_id="project.id"/>
           </div>
-          <div class="tab-pane" id="bt-content_1_3" role="tabpanel" aria-labelledby="bt-tab_1_3">
-            <div class="grid">
-              <div class="grid-body py-3">
-                <div class="d-flex justify-content-between align-items-center">
-                  <h4 class="card-title">Команда</h4>
-                  <button class="btn btn-success has-icon btn-rounded">
-                    <i class="mdi mdi-account-plus-outline"></i>Добавить участника
-                  </button>
-                </div>
-              </div>
-              <div class="table-responsive">
-                <table class="table table-hover">
-                  <tbody>
-                  <tr>
-                    <td class="pr-0 pl-4">
-                      <img class="profile-img img-sm" src="https://placehold.it/50x50" alt="profile image">
-                    </td>
-                    <td class="pl-md-0">
-                      <small class="text-black font-weight-medium d-block">Barbara Curtis</small>
-                      <span>
-                              <span class="status-indicator rounded-indicator small bg-primary"></span>Account Deactivated </span>
-                    </td>
-                    <td>
-                      <button class="btn action-btn btn-like btn-outline-danger btn-rounded">
-                        <i class="mdi mdi-delete"></i>
-                      </button>
-                    </td>
-                  </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
           <div class="tab-pane" id="bt-content_1_4" role="tabpanel" aria-labelledby="bt-tab_1_4">
-            <Notes v-bind:project_id="project.id"/>
+            <Notes v-bind:notes="project.notes" v-bind:project_id="project.id"/>
           </div>
         </div>
       </div>
@@ -143,6 +105,7 @@
         ],
         loading: false,
         date_diff: '',
+        date_percent: '',
       }
     },
     created: function () {
@@ -159,6 +122,11 @@
             var dateC = moment(this.project.date_end, "YYYYMMDDh:mm:ss");
 
             var date_diff = dateC.diff(dateB, 'days');
+
+            var dateD = moment(this.project.date_start, "YYYYMMDDh:mm:ss");
+            var date_amount = dateC.diff(dateD, 'days');
+
+
             var dney = 'дней';
             if (date_diff <= 4 && date_diff > 1 || date_diff < -1 && date_diff >= -4){
               var dney = 'дня';
@@ -166,6 +134,7 @@
               var dney = 'день';
             }
             this.date_diff = date_diff + ' ' + dney;
+            this.date_percent = Math.round(100 * (date_amount - date_diff)/ date_amount);
             this.loading = false;
           })
       },

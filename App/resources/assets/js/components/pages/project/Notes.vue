@@ -24,20 +24,16 @@
         <div class="grid-body">
           <div class="d-flex justify-content-between">
             <p class="card-title font-weight-light">
+              <b>{{note.user.last_name}} {{note.user.first_name[0]}}. {{note.user.patronymic[0]}}.</b>
               <small>{{note.created_at | dateAgo}}</small>
             </p>
             <div class="btn-group">
-              <button type="button" class="btn btn-trasnparent btn-xs component-flat pr-0"
-                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="mdi mdi-dots-vertical"></i>
+              <button type="button" class="btn btn-trasnparent btn-xs component-flat pr-0" @click="deleteNote(note, index)">
+                <i class="mdi mdi mdi-delete text-danger"></i>
               </button>
-              <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="#">Edit</a>
-                <a class="dropdown-item text-danger" @click="deleteNote(note, index)">Delete</a>
-              </div>
             </div>
           </div>
-          <div class="col-12">
+          <div class="col-12 mt-1">
             <div class="row">
               <div class="word-break"><p>{{note.body}}</p></div>
             </div>
@@ -51,11 +47,13 @@
   import moment from 'moment';
   export default {
     props: {
-      project_id: Number
+      project_id: Number,
+      notes: Array
     },
     data(){
       return {
         loading: false,
+        showDropDownMenu: '',
         form: {
           id: '',
           body: '',
@@ -63,19 +61,21 @@
           user_id: '',
           project_id: ''
         },
-        notes: {},
+
         errors: {},
         date_diff: '',
       }
     },
-    created: function () {
-      this.getNotes();
+    computed: {
+      auth() {
+        return this.$store.state.Auth;
+      },
     },
     methods: {
       createNote(){
         var vm = this;
         this.form.project_id = this.project_id;
-        this.form.user_id = 1;
+        this.form.user_id = this.auth.user_id;
         axios.post(route('notes.store'), this.form)
           .then(function (response) {
             pnotify.alert({
@@ -98,16 +98,6 @@
               });
             }
           });
-      },
-      getNotes(){
-        var vm = this;
-        this.loading = true;
-        axios.get(route('notes.index'))
-          .then((response) => {
-            this.notes = response.data.notes;
-            this.loading = false;
-          });
-
       },
       deleteNote(note, index){
         var vm = this;

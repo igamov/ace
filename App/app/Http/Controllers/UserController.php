@@ -41,12 +41,17 @@ class UserController extends Controller
 //    $task->project = $task->project()->with('customer')->get()[0];
 //    $task->comments = $task->comments()->orderBy('created_at', 'desc')->get();
     $user->load('role');
-    if ($user->role->name == 'manager') {
-      $user->projects = $user->manager_projects()->with('priority')->with('customer')->get();
-      $user->customers = $user->manager_customers()->get();
-    }
-    if ($user->role->name == 'customer') {
-      $user->customers = $user->spoke_customers()->get();
+    switch ($user->role->name){
+      case 'manager':
+        $user->projects = $user->manager_projects()->with('priority')->with('customer')->get();
+        $user->customers = $user->manager_customers()->get();
+        break;
+      case 'customer':
+        $user->customers = $user->spoke_customers()->get();
+        break;
+      case 'developer':
+        $user->tasks = $user->devTasks()->get();
+        break;
     }
     return response()->json($user);
   }

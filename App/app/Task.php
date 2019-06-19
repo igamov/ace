@@ -24,4 +24,16 @@ class Task extends Model
   {
     return $this->hasMany('App\Comment');
   }
+  public function history()
+  {
+    return $this->hasMany('App\History');
+  }
+  public function developer()
+  {
+    return $this->belongsTo('App\User', 'developer_id');
+  }
+  public function manager()
+  {
+    return $this->belongsTo('App\User', 'manager_id');
+  }
 }

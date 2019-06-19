@@ -6,7 +6,7 @@
     <div class="row">
       <div class="col-12 col-sm-9">
         <div class="grid">
-          <p class="grid-header">Задачи</p>
+          <p class="grid-header">Тикеты</p>
           <div class="item-wrapper">
             <table class="table table-hover">
               <thead>
@@ -15,29 +15,21 @@
                 <th>Наименование</th>
                 <th>Приоритет</th>
                 <th>Проект</th>
-                <th>Дата начала</th>
-                <th>Дата окончания</th>
                 <th>Статус</th>
-                <th></th>
               </tr>
               </thead>
               <tbody>
-              <tr v-for="task in filteredTasks">
-                <td>{{task.id}}</td>
+              <tr v-for="ticket in filteredTickets">
+                <td>{{ticket.id}}</td>
                 <td>
-                  <router-link :to="{name: 'taskShow', params: { id: task.id }}">{{task.title}}</router-link>
+                  <router-link :to="{name: 'ticketShow', params: { id: ticket.id }}">{{ticket.title}}</router-link>
                 </td>
-                <td><label :class="'badge '+ task.priority.color">{{task.priority.title}}</label></td>
+                <td><label :class="'badge '+ ticket.priority.color">{{ticket.priority.title}}</label></td>
                 <td>
-                  <router-link :to="{name: 'projectShow', params: { id: task.project.id }}">{{task.project.title}}
+                  <router-link :to="{name: 'projectShow', params: { id: ticket.project.id }}">{{ticket.project.title}}
                   </router-link>
                 </td>
-                <td>{{task.date_start}}</td>
-                <td>{{task.date_end}}</td>
-                <td>{{task.status.title}}</td>
-                <td class="actions">
-                  <i class="mdi mdi-dots-vertical"></i>
-                </td>
+                <td>{{ticket.status.title}}</td>
               </tr>
               </tbody>
             </table>
@@ -49,30 +41,41 @@
           <p class="grid-header">Фильтрация</p>
           <div class="grid-body">
             <div class="form-group">
-              <p class="font-weight-bold mb-3">Статус задачи:</p>
+              <p class="font-weight-bold mb-3">Статус:</p>
               <div class="radio mb-3">
                 <label class="radio-label mr-4">
-                  <input name="sample" type="radio" checked="" value="Новая" v-model="status_id">Новая <i
+                  <input name="sample" type="radio" checked="" value="Новая" v-model="status">Новая <i
                   class="input-frame"></i>
                 </label>
               </div>
               <div class="radio mb-3">
                 <label class="radio-label mr-4">
-                  <input name="sample" type="radio" checked="" value="В работе" v-model="status_id">В работе <i
+                  <input name="sample" type="radio" checked="" value="В работе" v-model="status">В работе <i
                   class="input-frame"></i>
                 </label>
               </div>
               <div class="radio mb-3">
                 <label class="radio-label mr-4">
-                  <input name="sample" type="radio" checked="" value="Проверка" v-model="status_id">Проверка <i
+                  <input name="sample" type="radio" checked="" value="Проверка" v-model="status">Проверка <i
                   class="input-frame"></i>
                 </label>
               </div>
               <div class="radio mb-3">
                 <label class="radio-label mr-4">
-                  <input name="sample" type="radio" checked="" value="Выполнена" v-model="status_id">Выполнена <i
+                  <input name="sample" type="radio" checked="" value="Выполнена" v-model="status">Выполнена <i
                   class="input-frame"></i>
                 </label>
+              </div>
+            </div>
+            <div class="form-group">
+              <p class="font-weight-bold mb-3">Проект:</p>
+              <div class="input-group">
+                <select title="Проект" v-model="project" id="project" class="custom-select">
+                  <option v-for="(project) in projects"
+                          :value="project.title">
+                    {{project.title}}
+                  </option>
+                </select>
               </div>
             </div>
             <div class="w-100 text-right">
@@ -89,35 +92,47 @@
   export default {
     data(){
       return {
-        tasks: [],
+        tickets: [],
+        projects: [],
         loading: false,
-        status_id: '',
+        status: '',
+        project: '',
       }
     },
-
     methods: {
       resetFilter(){
-        this.status_id = '';
+        this.status = '';
+        this.project = '';
       },
-      getTasks(){
+      getTickets(){
         this.loading = true;
         var vm = this;
-        axios.get(route('tasks.all') + '?user_id=' + vm.$store.state.Auth.user_id)
-          .then((response) => {
-            this.tasks = response.data.tasks;
+        axios.get(route('tickets.index') + '?user_id=' + vm.$store.state.Auth.user_id)
+          .then((responce) => {
+            this.tickets = responce.data.tickets;
+            this.loading = false;
+          })
+      },
+      getProjects(){
+        this.loading = true;
+        axios.get(route('projects.index') + '?user_id=' + this.$store.state.Auth.user_id)
+          .then((responce) => {
+            this.projects = responce.data.projects;
             this.loading = false;
           })
       }
     },
-    mounted() {
-      this.getTasks();
-    },
     computed: {
-      filteredTasks(){
-        return this.tasks.filter(task => {
-            return task.status.title.indexOf(this.status_id) > -1;
+      filteredTickets(){
+        return this.tickets.filter(ticket => {
+          return ticket.status.title.indexOf(this.status) > -1 &&
+            ticket.project.title.indexOf(this.project) > -1;
         });
       }
     },
+    mounted() {
+      this.getTickets();
+      this.getProjects();
+    }
   }
 </script>

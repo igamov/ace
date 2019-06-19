@@ -15,7 +15,7 @@ class NoteController extends Controller
   public function index()
   {
     $notes = Note::all();
-
+    $notes->load('user');
     return response()->json([
       'notes' => $notes->toArray()
     ]);
@@ -40,6 +40,7 @@ class NoteController extends Controller
     ]);
 
     $note->save();
+    $note->load('user');
 
     return response()->json($note->toArray());
   }

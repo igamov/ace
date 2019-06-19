@@ -14,7 +14,7 @@ class StatusController extends Controller
      */
   public function index()
   {
-    $statuses = Status::all();
+    $statuses = Status::orderBy('id', 'asc')->get();
 
     return response()->json([
       'statuses' => $statuses->toArray()

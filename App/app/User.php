@@ -43,9 +43,9 @@ class User extends Authenticatable
   {
     return $this->belongsTo('App\UserRoles');
   }
-//  public function devTasks(){
-//    return $this->hasMany('App\Task', 'developer_id', 'id');
-//  }
+  public function devTasks(){
+    return $this->hasMany('App\Task', 'developer_id', 'id');
+  }
   public function manager_projects(){
     return $this->hasMany('App\Project', 'manager_id', 'id');
   }
@@ -55,4 +55,5 @@ class User extends Authenticatable
   public function spoke_customers(){
     return $this->hasMany('App\Customer', 'spokesman_id', 'id');
   }
+
 }

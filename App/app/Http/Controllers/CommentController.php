@@ -32,15 +32,19 @@ class CommentController extends Controller
   public function store(Request $request)
   {
     $request->validate([
+      'task_id' => 'required|integer',
+      'user_id' => 'required|integer',
       'body' => 'required',
     ]);
     $comment = new Comment([
       'body' => $request->get('body'),
       'task_id' => $request->get('task_id'),
-      'user_id' => 1,
+      'user_id' => $request->get('user_id'),
     ]);
 
     $comment->save();
+
+    $comment->load('user');
 
     return response()->json($comment->toArray());
   }

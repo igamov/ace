@@ -65,6 +65,21 @@
           </li>
         </ul>
       </li>
+      <li v-if="auth.role_name !== 'developer'" class="nav-category-divider">Поддержка</li>
+      <li v-if="auth.role_name !== 'developer'">
+        <a href="#tickets" data-toggle="collapse">
+          <span class="link-title">Тикеты</span>
+          <i class="mdi mdi-airballoon link-icon"></i>
+        </a>
+        <ul class="collapse navigation-submenu" id="tickets">
+          <li>
+            <router-link :to="{ name: 'ticketList' }" exact>Список тикетов</router-link>
+          </li>
+          <li v-if="auth.role_name === 'admin' || auth.role_name === 'customer'">
+            <router-link :to="{ name: 'ticketCreate' }" exact>Создать тикет</router-link>
+          </li>
+        </ul>
+      </li>
       <li v-if="auth.role_name === 'admin' || auth.role_name === 'manager'" class="nav-category-divider">Настройки системы</li>
       <li v-if="auth.role_name === 'admin' || auth.role_name === 'manager'">
         <a href="#users" data-toggle="collapse" aria-expanded="false">

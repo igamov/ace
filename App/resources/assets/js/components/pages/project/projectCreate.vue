@@ -42,7 +42,7 @@
                     <div class="input-group">
                       <input type="text" v-model.lazy="project.date_start"
                              :class="'form-control enable-mask phone-mask' + (errors.date_start ? ' is-invalid' : '')"
-                             id="date_start" placeholder="DD/MM/YYYY">
+                             id="date_start" placeholder="дд.мм.гггг">
                       <div class="invalid-feedback" v-if="errors.date_start">
                         {{errors.date_start[0]}}
                       </div>
@@ -53,7 +53,7 @@
                     <label for="date_end">Дата окончания</label>
                     <div class="input-group">
                       <input type="text" v-model="project.date_end"
-                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end" placeholder="DD/MM/YYYY">
+                             :class="'form-control' + (errors.date_end ? ' is-invalid' : '')" id="date_end" placeholder="дд.мм.гггг">
                       <div class="invalid-feedback" v-if="errors.date_end">
                         {{errors.date_end[0]}}
                       </div>
@@ -148,7 +148,7 @@
       getCustomers(){
         this.loading = true;
         var vm = this;
-        axios.get(route('customers.index'))
+        axios.get(route('customers.index') + '?user_id=' + vm.$store.state.Auth.user_id)
           .then((responce) => {
             vm.customers = responce.data.customers;
             if (vm.customers.length > 0) {
@@ -164,7 +164,7 @@
           .then((response) => {
             vm.managers = response.data.managers;
             if (vm.managers.length > 0) {
-              vm.customer.manager_id = vm.managers[0].id;
+              vm.project.manager_id = vm.managers[0].id;
             }
 
             vm.loading = false;

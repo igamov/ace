@@ -23,6 +23,10 @@ import invoiceShow from './components/pages/invoice/invoiceShow'
 import taskList from './components/pages/task/taskList';
 import taskCreate from './components/pages/task/taskCreate';
 import taskShow from './components/pages/task/taskShow'
+//Tickets
+import ticketList from './components/pages/ticket/ticketList';
+import ticketCreate from './components/pages/ticket/ticketCreate';
+import ticketShow from './components/pages/ticket/ticketShow'
 // Errors
 import PageNotFound from './components/pages/errors/PageNotFound';
 import forbidden from './components/pages/errors/403';
@@ -114,6 +118,24 @@ const routes = [
     name: 'taskShow',
     component: taskShow,
     meta: {requires: true, roles: ['admin', 'manager', 'developer']}
+  },
+  {
+    path: '/tickets',
+    name: 'ticketList',
+    component: ticketList,
+    meta: {requires: true, roles: ['admin', 'manager', 'customer']}
+  },
+  {
+    path: '/tickets/create',
+    name: 'ticketCreate',
+    component: ticketCreate,
+    meta: {requires: true, roles: ['admin', 'customer']}
+  },
+  {
+    path: '/tickets/:id',
+    name: 'ticketShow',
+    component: ticketShow,
+    meta: {requires: true, roles: ['admin', 'manager', 'customer']}
   },
   {
     path: '/settings',

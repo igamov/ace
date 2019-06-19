@@ -103,8 +103,8 @@
       getUsers(){
         this.loading = true;
         axios.get(route('user.index'))
-          .then((responce) => {
-            this.users = responce.data.users;
+          .then((response) => {
+            this.users = response.data.users;
             this.loading = false;
           })
       }
@@ -122,7 +122,6 @@
     },
     mounted()
     {
-
       this.getUsers();
     }
   }

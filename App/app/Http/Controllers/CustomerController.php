@@ -46,8 +46,20 @@ class CustomerController extends Controller
   public function store(Request $request)
   {
     $request->validate([
-      'name' => 'required|max:255',
+      'name' => 'required|unique:customers,name|max:255',
       'phone' => 'required',
+      'site' => 'required|url',
+      'inn' => 'required|integer',
+      'kpp' => 'integer',
+      'ogrn' => 'required|integer',
+      'legal_name' => 'required',
+      'actual_address' => 'required',
+      'legal_address' => 'required',
+      'bank_details' => 'required',
+      'manager_id' => 'required|integer',
+      'customer_type_id' => 'required|integer',
+      'area_activity_id' => 'required|integer',
+      'spokesman_id' => 'required|integer',
     ]);
     $customer = new Customer([
       'name' => $request->get('name'),

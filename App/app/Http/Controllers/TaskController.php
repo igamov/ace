@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\History;
+use App\Status;
 use Illuminate\Http\Request;
 use App\Task;
 use App\User;
+use Carbon\Carbon;
 
 class TaskController extends Controller
 {
@@ -35,12 +38,16 @@ class TaskController extends Controller
   }
     /**
      * Display a listing of the resource.
-     *
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-  public function index()
+  public function index(Request $request)
   {
-    $tasks = Task::orderBy('rank')->get();
+    if ($request->project_id) {
+      $tasks = Task::where('project_id', $request->project_id)->orderBy('rank')->get();
+    }else{
+      $tasks = Task::orderBy('rank')->get();
+    }
     $tasks->load('project', 'priority', 'status');
     $tasks_new = $tasks->filter(function ($task, $key) {
       return $task->status_id == 1;
@@ -80,13 +87,23 @@ class TaskController extends Controller
     $request->validate([
       'title' => 'required|max:255',
       'body' => 'required',
+      'date_start' => 'required|date_format:d.m.Y',
+      'date_end' => 'required|date_format:d.m.Y',
+      'manager_id' => 'required|integer',
+      'project_id' => 'required|integer',
+      'developer_id' => 'required|integer',
+      'priority_id'  => 'required|integer',
+      'user_id' => 'required|integer'
     ]);
-
+    $date_start = explode('.', $request->get('date_start'));
+    $date_start = Carbon::createFromDate($date_start[2], $date_start[1], $date_start[0]);
+    $date_end = explode('.', $request->get('date_end'));
+    $date_end = Carbon::createFromDate($date_end[2], $date_end[1], $date_end[0]);
     $task = new Task([
       'title' => $request->get('title'),
       'body' => $request->get('body'),
-      'date_start' => $request->get('date_start'),
-      'date_end' => $request->get('date_end'),
+      'date_start' => $date_start,
+      'date_end' => $date_end,
       'manager_id' => $request->get('manager_id'),
       'project_id' => $request->get('project_id'),
       'priority_id' => $request->get('priority_id'),
@@ -98,6 +115,13 @@ class TaskController extends Controller
     ]);
 
     $task->save();
+
+    $history = new History([
+      'body' => 'Создана задача',
+      'user_id' => $request->get('user_id'),
+      'task_id' => $task->id,
+    ]);
+    $history->save();
 
     return response()->json($task->toArray());
   }
@@ -111,9 +135,10 @@ class TaskController extends Controller
   public function show($id)
   {
     $task = Task::findOrFail($id);
-    $task->project = $task->project()->with('customer')->get()[0];
-    $task->comments = $task->comments()->orderBy('created_at', 'desc')->get();
-    $task->load('priority', 'status');
+    $task->project = $task->project()->with('customer')->with('manager')->get()[0];
+    $task->comments = $task->comments()->with('user')->orderBy('created_at', 'desc')->get();
+    $task->histories = $task->history()->with('user')->orderBy('created_at', 'desc')->get();
+    $task->load('developer','priority', 'status');
     return response()->json($task);
   }
 
@@ -128,10 +153,22 @@ class TaskController extends Controller
   public function update(Request $request, $id)
   {
     $task = Task::findOrFail($id);
-    $task->update($request->all());
-    $task->project = $task->project()->with('customer')->get()[0];
-    $task->comments = $task->comments()->orderBy('created_at', 'desc')->get();
-    $task->load('priority', 'status');
+    if($request->get('action') == 'update_status' && $request->get('user_id')) {
+      $old_status = $task->status->title;
+      $new_status = Status::findOrFail($request->task['status_id'])->title;
+      $history = new History([
+        'body' => 'Изменен статус с '.$old_status.' на '.$new_status,
+        'user_id' => $request->get('user_id'),
+        'task_id' => $task->id,
+      ]);
+      $history->save();
+    }
+
+    $task->update($request->task);
+    $task->project = $task->project()->with('customer')->with('manager')->get()[0];
+    $task->comments = $task->comments()->with('user')->orderBy('created_at', 'desc')->get();
+    $task->histories = $task->history()->with('user')->orderBy('created_at', 'desc')->get();
+    $task->load('developer','priority', 'status');
     return response()->json($task);
   }
   /**
@@ -163,8 +200,16 @@ class TaskController extends Controller
    */
   public function updateStatus(Request $request, Task $task)
   {
+    $old_status = $task->status->title;
     $task->status_id = $request->status_id;
     $task->save();
+    $new_status = Status::findOrFail($request->status_id)->title;
+    $history = new History([
+      'body' => 'Изменен статус с '.$old_status.' на '.$new_status,
+      'user_id' => $request->get('user_id'),
+      'task_id' => $task->id,
+    ]);
+    $history->save();
     return response('Update Successful.', 200);
   }
   /**
